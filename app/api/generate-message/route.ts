@@ -7,6 +7,26 @@ interface GenerateMessageRequest {
   userOccupation: string
 }
 
+// Simple in-memory rate limiter
+const rateLimit = new Map<string, { count: number; resetTime: number }>()
+
+function checkRateLimit(identifier: string, maxRequests: number = 10, windowMs: number = 3600000): boolean {
+  const now = Date.now()
+  const record = rateLimit.get(identifier)
+
+  if (!record || now > record.resetTime) {
+    rateLimit.set(identifier, { count: 1, resetTime: now + windowMs })
+    return true
+  }
+
+  if (record.count < maxRequests) {
+    record.count++
+    return true
+  }
+
+  return false
+}
+
 async function fetchWithRetry(
   apiUrl: string,
   payload: object,
@@ -36,6 +56,20 @@ async function fetchWithRetry(
 
 export async function POST(request: NextRequest) {
   try {
+    // Get client IP for rate limiting
+    const clientIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+      request.headers.get("x-real-ip") ||
+      "unknown"
+
+    // Check rate limit (10 requests per hour per IP)
+    if (!checkRateLimit(clientIp, 10, 3600000)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      )
+    }
+
     const apiKey = process.env.GEMINI_API_KEY
 
     if (!apiKey) {

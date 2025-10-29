@@ -682,7 +682,7 @@ export default function Page() {
                 <GithubIcon className="w-5 h-5" />
               </a>
               <a
-                href="https://linkedin.com/in/murat-sahin-b0b5b5b0"
+                href="https://www.linkedin.com/in/murat-s-70545987/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors duration-300"
