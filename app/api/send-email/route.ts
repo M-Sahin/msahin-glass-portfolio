@@ -28,6 +28,46 @@ function checkRateLimit(identifier: string, maxRequests: number = 3, windowMs: n
   return false
 }
 
+// Enhanced spam detection
+function isSpam(visitorName: string, visitorEmail: string, contactReason: string, message: string): boolean {
+  // Check for excessive URLs
+  const urlCount = (message.match(/https?:\/\//g) || []).length
+  if (urlCount > 3) return true
+
+  // Check for excessive special characters or encoding attempts
+  const specialCharRatio = (message.match(/[!@#$%^&*()_+=\[\]{};:'",.<>?/\\|`~-]/g) || []).length / message.length
+  if (specialCharRatio > 0.3) return true
+
+  // Check message length (too short or absurdly long)
+  if (message.length < 10 || message.length > 5000) return true
+
+  // Check for common spam keywords
+  const spamKeywords = [
+    "viagra", "casino", "lottery", "prize", "winner", "click here",
+    "buy now", "limited time", "act now", "urgent", "bank account",
+    "credit card", "free money", "bitcoin", "cryptocurrency"
+  ]
+  const lowerMessage = message.toLowerCase()
+  if (spamKeywords.some(keyword => lowerMessage.includes(keyword))) return true
+
+  // Check for repeated characters (common spam pattern)
+  if (/(.)\1{4,}/.test(message)) return true
+
+  // Check for all caps (at least 50% caps with length > 20)
+  const capsCount = (message.match(/[A-Z]/g) || []).length
+  if (message.length > 20 && capsCount / message.length > 0.5) return true
+
+  // Validate email domain is not disposable (simple check)
+  const disposableDomains = [
+    "tempmail.com", "10minutemail.com", "guerrillamail.com",
+    "mailinator.com", "throwaway.email", "temp-mail.org"
+  ]
+  const domain = visitorEmail.split("@")[1]?.toLowerCase()
+  if (disposableDomains.includes(domain)) return true
+
+  return false
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Get client IP for rate limiting
@@ -55,11 +95,34 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate field lengths
+    if (visitorName.length < 2 || visitorName.length > 100) {
+      return NextResponse.json(
+        { error: "Name must be between 2 and 100 characters" },
+        { status: 400 }
+      )
+    }
+
+    if (contactReason.length < 3 || contactReason.length > 100) {
+      return NextResponse.json(
+        { error: "Contact reason must be between 3 and 100 characters" },
+        { status: 400 }
+      )
+    }
+
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(visitorEmail)) {
       return NextResponse.json(
         { error: "Invalid email address" },
+        { status: 400 }
+      )
+    }
+
+    // Check for spam
+    if (isSpam(visitorName, visitorEmail, contactReason, message)) {
+      return NextResponse.json(
+        { error: "Your message appears to be spam. Please try again." },
         { status: 400 }
       )
     }

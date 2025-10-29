@@ -14,7 +14,9 @@ export function FloatingNav() {
     { id: "skills", label: "Skills" },
     { id: "work", label: "Work" },
     { id: "experience", label: "Experience" },
+    { id: "articles", label: "Insights" },
     { id: "quotes", label: "Quotes" },
+    { id: "contact", label: "Contact" },
   ]
 
   useEffect(() => {

@@ -35,6 +35,7 @@ import { QuotesCarousel } from "@/components/quotes-carousel"
 
 export default function Page() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedSkillCategory, setSelectedSkillCategory] = useState("all")
 
   const user = {
     name: "Murat Sahin",
@@ -159,15 +160,26 @@ export default function Page() {
   ]
 
   const skills = [
-    { name: "React", icon: ReactIcon, color: "text-cyan-400" },
-    { name: "TypeScript", icon: TypeScriptIcon, color: "text-blue-400" },
-    { name: ".NET", icon: DotNetIcon, color: "text-purple-400" },
-    { name: "Docker", icon: DockerIcon, color: "text-blue-500" },
-    { name: "Next.js", icon: NextJsIcon, color: "text-white" },
-    { name: "Tailwind", icon: TailwindIcon, color: "text-teal-400" },
-    { name: "Azure", icon: AzureIcon, color: "text-blue-400" },
-    { name: "SQL Developer", icon: SqlDeveloperIcon, color: "text-green-400" },
+    { name: "React", icon: ReactIcon, color: "text-cyan-400", category: "frontend" },
+    { name: "TypeScript", icon: TypeScriptIcon, color: "text-blue-400", category: "frontend" },
+    { name: ".NET", icon: DotNetIcon, color: "text-purple-400", category: "backend" },
+    { name: "Docker", icon: DockerIcon, color: "text-blue-500", category: "devops" },
+    { name: "Next.js", icon: NextJsIcon, color: "text-white", category: "frontend" },
+    { name: "Tailwind", icon: TailwindIcon, color: "text-teal-400", category: "frontend" },
+    { name: "Azure", icon: AzureIcon, color: "text-blue-400", category: "devops" },
+    { name: "SQL Developer", icon: SqlDeveloperIcon, color: "text-green-400", category: "backend" },
   ]
+
+  const skillCategories = [
+    { id: "all", label: "All Skills" },
+    { id: "frontend", label: "Frontend" },
+    { id: "backend", label: "Backend" },
+    { id: "devops", label: "DevOps" },
+  ]
+
+  const filteredSkills = selectedSkillCategory === "all" 
+    ? skills 
+    : skills.filter(skill => skill.category === selectedSkillCategory)
 
   const stats = [
     { label: "Years Experience", value: 5, suffix: "+" },
@@ -416,12 +428,30 @@ export default function Page() {
         <section id="skills" className="relative w-full py-24 px-8">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">Skills</h2>
+            
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {skillCategories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedSkillCategory(category.id)}
+                  className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
+                    selectedSkillCategory === category.id
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/50 scale-105"
+                      : "bg-gray-800/60 text-gray-300 border border-gray-700/50 hover:border-indigo-500/50 hover:text-white"
+                  }`}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {skills.map((skill, index) => (
-                <div key={index} className="relative group">
+              {filteredSkills.map((skill, index) => (
+                <div key={index} className="relative group animate-scale-in">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-300 blur"></div>
                   <div className="relative bg-gray-800/60 backdrop-blur-lg rounded-2xl border border-gray-700/50 p-6 flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-indigo-500/50 hover:scale-105 hover:shadow-xl hover:shadow-indigo-500/10">
-                    <skill.icon className={`${skill.color} w-12 h-12 mb-3`} />
+                    <skill.icon className={`${skill.color} w-12 h-12 mb-3 transition-transform duration-300 group-hover:animate-bounce-subtle`} />
                     <h3 className="text-lg font-bold text-white">{skill.name}</h3>
                   </div>
                 </div>
@@ -615,7 +645,7 @@ export default function Page() {
       <AnimatedSection>
         <section id="articles" className="relative w-full py-24 px-8 bg-gray-900/50">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">Articles & Insights</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">Insights</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {articles.map((article, index) => (
                 <a
@@ -664,6 +694,32 @@ export default function Page() {
           <div className="max-w-5xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">Words to Code By</h2>
             <QuotesCarousel quotes={quotes} />
+          </div>
+        </section>
+      </AnimatedSection>
+
+      <AnimatedSection>
+        <section id="contact" className="relative w-full py-24 px-8 mb-24">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">Get In Touch</h2>
+            <div className="relative group">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-300 blur"></div>
+              <div className="relative bg-gray-800/60 backdrop-blur-lg rounded-2xl border border-gray-700/50 p-8">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="w-full py-4 px-8 rounded-lg bg-indigo-600 text-white font-semibold shadow-lg transition-all duration-300 ease-in-out
+                             hover:bg-indigo-500 hover:scale-105 
+                             focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75
+                             flex items-center justify-center gap-2"
+                >
+                  <GeminiIcon className="w-5 h-5" />
+                  Send Me a Message
+                </button>
+                <p className="text-gray-400 text-center mt-6 text-sm">
+                  Have a project in mind or just want to chat? I'd love to hear from you!
+                </p>
+              </div>
+            </div>
           </div>
         </section>
       </AnimatedSection>
