@@ -23,6 +23,7 @@ import {
   TrendingUpIcon,
   GlobeIcon,
   GeminiIcon,
+  SqlDeveloperIcon,
 } from "@/components/icons"
 import { ContactModal } from "@/components/contact-modal"
 import { ScrollIndicator } from "@/components/scroll-indicator"
@@ -30,6 +31,7 @@ import { FloatingNav } from "@/components/floating-nav"
 import { BackToTop } from "@/components/back-to-top"
 import { BackgroundOrbs } from "@/components/background-orbs"
 import { GitHubActivity } from "@/components/github-activity"
+import { QuotesCarousel } from "@/components/quotes-carousel"
 
 export default function Page() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -114,6 +116,46 @@ export default function Page() {
       text: "The best error message is the one that never shows up.",
       author: "Thomas Fuchs",
     },
+    {
+      text: "There are two ways of constructing a software design. One way is to make it so simple that there are obviously no deficiencies. And the other way is to make it so complicated that there are no obvious deficiencies.",
+      author: "C.A.R. Hoare",
+    },
+    {
+      text: "Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.",
+      author: "Martin Golding",
+    },
+    {
+      text: "Most good programmers do programming not because they expect to get paid or get adulation by the public, but because it is fun to program.",
+      author: "Linus Torvalds",
+    },
+    {
+      text: "On two occasions I have been asked [by members of Parliament]: 'Pray, Mr. Babbage, if you put into the machine wrong figures, will the right answers come out?' I am not able rightly to apprehend the kind of confusion of ideas that could provoke such a question.",
+      author: "Charles Babbage",
+    },
+    {
+      text: "To iterate is human, to recurse divine.",
+      author: "L. Peter Deutsch",
+    },
+    {
+      text: "The trouble with programmers is that you can never tell what a programmer is doing until it's too late.",
+      author: "Seymour Cray",
+    },
+    {
+      text: "Most software today is very much like an Egyptian pyramid with millions of bricks piled on top of each other, with no structural integrity, but just done by brute force and thousands of slaves.",
+      author: "Alan Kay",
+    },
+    {
+      text: "Most of you are familiar with the virtues of a programmer. There are three, of course: laziness, impatience, and hubris.",
+      author: "Larry Wall",
+    },
+    {
+      text: "First learn computer science and all the theory. Next develop a programming style. Then forget all that and just hack.",
+      author: "George Carrette",
+    },
+    {
+      text: "People think that computer science is the art of geniuses but the actual reality is the opposite, just many people doing things that build on each other, like a wall of mini stones.",
+      author: "Donald Knuth",
+    },
   ]
 
   const skills = [
@@ -124,6 +166,7 @@ export default function Page() {
     { name: "Next.js", icon: NextJsIcon, color: "text-white" },
     { name: "Tailwind", icon: TailwindIcon, color: "text-teal-400" },
     { name: "Azure", icon: AzureIcon, color: "text-blue-400" },
+    { name: "SQL Developer", icon: SqlDeveloperIcon, color: "text-green-400" },
   ]
 
   const stats = [
@@ -370,6 +413,25 @@ export default function Page() {
       </AnimatedSection>
 
       <AnimatedSection>
+        <section id="tech-stack" className="relative w-full py-24 px-8">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">Tech Stack</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {skills.map((skill, index) => (
+                <div key={index} className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-300 blur"></div>
+                  <div className="relative bg-gray-800/60 backdrop-blur-lg rounded-2xl border border-gray-700/50 p-6 flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-indigo-500/50 hover:scale-105 hover:shadow-xl hover:shadow-indigo-500/10">
+                    <skill.icon className={`${skill.color} w-12 h-12 mb-3`} />
+                    <h3 className="text-lg font-bold text-white">{skill.name}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </AnimatedSection>
+
+      <AnimatedSection>
         <section id="work" className="relative w-full py-24 px-8 bg-gray-900/50">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">My Work</h2>
@@ -601,18 +663,7 @@ export default function Page() {
         <section id="quotes" className="relative w-full py-24 px-8 bg-gray-900/50">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">Words to Code By</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {quotes.map((quote, index) => (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600 rounded-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-300 blur"></div>
-                  <div className="relative bg-gray-800/60 backdrop-blur-lg rounded-2xl border border-gray-700/50 p-8 transition-all duration-300 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10">
-                    <QuoteIcon className="w-8 h-8 text-indigo-400 mb-4 opacity-50" />
-                    <p className="text-gray-300 text-lg leading-relaxed mb-4 italic">{quote.text}</p>
-                    <p className="text-indigo-400 font-medium">— {quote.author}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <QuotesCarousel quotes={quotes} />
           </div>
         </section>
       </AnimatedSection>

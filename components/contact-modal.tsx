@@ -23,6 +23,7 @@ export function ContactModal({ user, isOpen, onClose }: ContactModalProps) {
   const [message, setMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
 
   const handleGenerateMessage = async () => {
     if (!visitorName || !contactReason) {
@@ -57,6 +58,53 @@ export function ContactModal({ user, isOpen, onClose }: ContactModalProps) {
       }
     } catch (err) {
       setError("Failed to generate message. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleSendEmail = async () => {
+    if (!visitorName || !visitorEmail || !message) {
+      setError("Please fill in all required fields.")
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          visitorName,
+          visitorEmail,
+          contactReason,
+          message,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      if (result.message) {
+        setSuccess(true)
+        // Reset form after successful submission
+        setTimeout(() => {
+          setVisitorName("")
+          setVisitorEmail("")
+          setContactReason("Job Opportunity")
+          setMessage("")
+          setSuccess(false)
+          onClose()
+        }, 2000)
+      } else {
+        throw new Error(result.error || "Failed to send email.")
+      }
+    } catch (err) {
+      setError("Failed to send email. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -142,6 +190,7 @@ export function ContactModal({ user, isOpen, onClose }: ContactModalProps) {
           </div>
 
           {error && <p className="text-sm text-red-400">{error}</p>}
+          {success && <p className="text-sm text-green-400">Email sent successfully! Thank you for reaching out.</p>}
 
           <div className="flex flex-col sm:flex-row gap-4 pt-2">
             <button
@@ -158,12 +207,15 @@ export function ContactModal({ user, isOpen, onClose }: ContactModalProps) {
               {isLoading ? "Generating..." : "Generate Message Draft"}
             </button>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSendEmail}
+              disabled={isLoading}
               className="flex-1 py-2.5 px-4 rounded-lg bg-gray-600 text-white font-semibold transition-all duration-300 ease-in-out
                          hover:bg-gray-500
-                         focus:outline-none focus:ring-2 focus:ring-gray-400"
+                         focus:outline-none focus:ring-2 focus:ring-gray-400
+                         disabled:bg-gray-700 disabled:cursor-not-allowed"
             >
-              Send Message
+              {isLoading ? "Sending..." : "Send Message"}
             </button>
           </div>
         </form>
