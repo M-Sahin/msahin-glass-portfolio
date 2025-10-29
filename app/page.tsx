@@ -413,9 +413,9 @@ export default function Page() {
       </AnimatedSection>
 
       <AnimatedSection>
-        <section id="tech-stack" className="relative w-full py-24 px-8">
+        <section id="skills" className="relative w-full py-24 px-8">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">Tech Stack</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">Skills</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {skills.map((skill, index) => (
                 <div key={index} className="relative group">
@@ -667,6 +667,32 @@ export default function Page() {
           </div>
         </section>
       </AnimatedSection>
+
+      <footer className="relative w-full py-6 px-8 bg-gray-900/80 border-t border-gray-700/50 backdrop-blur-lg">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-white font-semibold text-sm">Murat Sahin © {new Date().getFullYear()} All rights reserved.</p>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://github.com/M-Sahin"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <GithubIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://linkedin.com/in/murat-sahin-b0b5b5b0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <LinkedInIcon className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       <ContactModal user={user} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </main>
