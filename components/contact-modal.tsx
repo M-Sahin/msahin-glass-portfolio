@@ -16,28 +16,6 @@ interface ContactModalProps {
   onClose: () => void
 }
 
-async function fetchWithRetry(apiUrl: string, payload: object, retries = 3, delay = 1000): Promise<any> {
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    return await response.json()
-  } catch (error) {
-    if (retries > 0) {
-      await new Promise((resolve) => setTimeout(resolve, delay))
-      return fetchWithRetry(apiUrl, payload, retries - 1, delay * 2)
-    } else {
-      throw error
-    }
-  }
-}
-
 export function ContactModal({ user, isOpen, onClose }: ContactModalProps) {
   const [visitorName, setVisitorName] = useState("")
   const [visitorEmail, setVisitorEmail] = useState("")
@@ -55,32 +33,27 @@ export function ContactModal({ user, isOpen, onClose }: ContactModalProps) {
     setIsLoading(true)
     setError(null)
 
-    const apiKey = ""
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`
-
-    const systemPrompt = `You are a professional assistant. A visitor wants to contact ${user.name} (${user.occupation}).
-The visitor's name is ${visitorName}.
-Their reason for contacting is: "${contactReason}".
-Write a polite, professional, and concise message draft (1-3 sentences) for the visitor to send.
-Do not include a subject line. Start the message directly, e.g., "Hello ${user.name.split(" ")[0]},".`
-
-    const userQuery = "Please generate the message draft now."
-
-    const payload = {
-      contents: [{ parts: [{ text: userQuery }] }],
-      systemInstruction: {
-        parts: [{ text: systemPrompt }],
-      },
-    }
-
     try {
-      const result = await fetchWithRetry(apiUrl, payload)
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text
+      const response = await fetch("/api/generate-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          visitorName,
+          contactReason,
+          userName: user.name,
+          userOccupation: user.occupation,
+        }),
+      })
 
-      if (text) {
-        setMessage(text)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      if (result.message) {
+        setMessage(result.message)
       } else {
-        throw new Error("No content received from API.")
+        throw new Error(result.error || "No message generated.")
       }
     } catch (err) {
       setError("Failed to generate message. Please try again.")

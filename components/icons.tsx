@@ -355,3 +355,22 @@ export const GlobeIcon = ({ className = "w-6 h-6" }: { className?: string }) => 
     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
   </svg>
 )
+
+export const GeminiIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M8 12l3 3 5-5"></path>
+    <path d="M12 2v20M2 12h20"></path>
+  </svg>
+)

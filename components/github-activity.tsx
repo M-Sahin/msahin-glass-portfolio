@@ -24,11 +24,11 @@ export function GitHubActivity() {
           <div className="grid grid-cols-2 gap-4 mt-6">
             <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700/30">
               <p className="text-gray-400 text-sm mb-1">Public Repos</p>
-              <p className="text-2xl font-bold text-white">15+</p>
+              <p className="text-2xl font-bold text-white">45+</p>
             </div>
             <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700/30">
               <p className="text-gray-400 text-sm mb-1">Contributions</p>
-              <p className="text-2xl font-bold text-white">500+</p>
+              <p className="text-2xl font-bold text-white">120+</p>
             </div>
           </div>
 

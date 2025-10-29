@@ -21,7 +21,8 @@ import {
   BookOpenIcon,
   CalendarIcon,
   TrendingUpIcon,
-  GlobeIcon, // Added GlobeIcon import
+  GlobeIcon,
+  GeminiIcon,
 } from "@/components/icons"
 import { ContactModal } from "@/components/contact-modal"
 import { ScrollIndicator } from "@/components/scroll-indicator"
@@ -301,8 +302,10 @@ export default function Page() {
                   className="flex-grow py-3 px-8 rounded-lg bg-transparent text-indigo-300 font-semibold border border-indigo-500/50 
                                  transition-all duration-300 ease-in-out
                                  hover:bg-indigo-700/20 hover:border-indigo-500 
-                                 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75"
+                                 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75
+                                 flex items-center justify-center gap-2"
                 >
+                  <GeminiIcon className="w-5 h-5" />
                   Get In Touch
                 </button>
               </div>
