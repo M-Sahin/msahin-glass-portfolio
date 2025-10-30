@@ -302,7 +302,7 @@ export default function Page() {
         ></div>
 
         <div className="relative z-10 flex h-full w-full flex-col md:flex-row">
-          <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center md:justify-end p-8 lg:pr-24">
+          <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center md:justify-end p-8 lg:pr-24 pt-16 md:pt-0">
             <div className="w-full max-w-md text-left animate-fade-in">
               <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">{user.name}</h1>
 
